@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    <title>福州大学一码通</title>
+    <meta name="description" content=""/>
+    <meta name="keywords" content="">
+    <link rel="icon" href="favicon.ico" type="image">
+    <style>
+        body {
+            min-width: 320px;
+            width: 24rem;
+            margin: 0 auto;
+            -webkit-tap-highlight-color: transparent;
+            background-color: #3b82b8;
+            padding: 1.3rem 0 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 50rem;
+        }
+
+        .nav {
+            height: 5.72rem;
+            padding-top: 1.216rem;
+            padding-left: 1.664rem;
+        }
+
+        .nav div {
+            font-size: 1.152rem;
+            color: #fdfcfc;
+        }
+
+        .nav #name {
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            position: absolute;
+            right: 1.599rem;
+            top: 0.142rem;
+        }
+
+        .logo img {
+            height: 6.432rem;
+            object-fit: contain;
+        }
+
+        .main {
+            position: relative;
+            margin: 1.28rem auto 0;
+            height: 30.65rem;
+            width: 20.64rem;
+            background-color: #fdfcfc;
+            padding-top: 1.055rem;
+            border-radius: .64rem;
+            overflow: hidden;
+        }
+
+        .main .zebra img {
+            width: 16.456rem;
+            height: 5.384rem;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        .main .time {
+            color: green;
+            font-size: 1.2rem;
+            text-align: center;
+            font-weight: 400;
+            height: 2rem;
+        }
+
+        .main .time span {
+            font-size: 2.2rem;
+        }
+
+        .main .zebra-2 {
+            width: 100%;
+            height: 8.7rem;
+            margin: 2.5rem auto 0;
+        }
+
+        .main .zebra-2 img,
+        .main .zebra-2 canvas{
+            width: 50%;
+            height: 100%;
+            display: block;
+            margin: 0 auto;
+            object-fit: contain;
+        }
+
+        .main .free {
+            position: absolute;
+            left: 100%;
+            margin: 0 auto;
+            height: 2.4rem;
+            width: 7.776rem;
+            color: green;
+            font-size: 2.6rem;
+        }
+
+        .main .caption {
+            margin: 3.5rem auto 0;
+            padding: 0 1.67rem;
+            width: 100%;
+            color: green;
+            font-size: .736rem;
+            text-align: left;
+        }
+
+        .main .card {
+            position: absolute;
+            bottom: 1.4rem;
+            width: 20.64rem;
+        }
+
+        .main .card img {
+            position: relative;
+            float: left;
+            left: 1.6rem;
+            width: 1.536rem;
+            height: 1.568rem;
+        }
+
+        .main .card > div {
+            position: relative;
+            float: left;
+            left: 2rem;
+            top: -0.4rem;
+        }
+
+        .main .card > div div {
+            font-size: .8rem;
+            color: #4e4e4e;
+            left: 3.456rem;
+            top: 0;
+        }
+
+        .footer {
+            width: 7.99rem;
+            height: 2.23rem;
+            border: 2px solid #fdfcfc;
+            margin: 1.6rem auto 0;
+            border-radius: .5rem;
+            color: #fdfcfc;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <div class="nav">
+        <div id="name">姓名：</div>
+        <div id="department">学院：</div>
+    </div>
+    <div class="logo">
+        <img src="src/img/logo.png" alt="">
+    </div>
+
+    <div class="main">
+        <div class="zebra">
+            <img src="src/img/bar-code.png" alt="">
+        </div>
+
+        <div class="time"></div>
+
+        <div class="zebra-2"></div>
+
+        <div class="free"></div>
+
+        <div class="caption">未见异常，允许出行，请出动出示，配合检测，并做好自我防护，出行前请确认。</div>
+
+        <div class="card">
+            <img src="src/img/card-icon.png" alt="">
+            <div>
+                <div>一卡通</div>
+                <div>适用所有场景</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">每日健康填报</div>
+</div>
+
+<script src="./src/js/qrcode.min.js"></script>
+<script>
+    window.onload = function () {
+        const name = document.querySelector('#name');
+        const department = document.querySelector('#department');
+        const time = document.querySelector('.time');
+        const free = document.querySelector('.free');
+
+        // 文字
+        name.innerText = '姓名: ' + localStorage.getItem('name');
+        department.innerText = '部门: ' + localStorage.getItem('department');
+
+
+        // 滚动
+        function animate(obj) {
+            free.innerText = localStorage.getItem('words')
+            const left = free.offsetLeft;
+            const width = free.clientWidth;
+            setInterval(function () {
+                if (obj.offsetLeft < -width) {
+                    obj.style.left = left + 'px';
+                }
+                obj.style.left = obj.offsetLeft - 4 + 'px';
+            }, 50);
+        }
+
+        animate(free);
+
+
+        // QR
+        new QRCode(document.querySelector(".zebra-2"), {
+            width: '128',
+            height: '128',
+            text: localStorage.getItem('code'),
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+
+        // 时间
+        function setTime() {
+            const date = new Date();
+            const month = fillZero(date.getMonth() + 1);
+            const day = fillZero(date.getDate());
+            const hour = fillZero(date.getHours());
+            const minute = fillZero(date.getMinutes());
+            const second = fillZero(date.getSeconds());
+            time.innerHTML = `${month}月${day}日 <span>${second}</span> ${hour}:${minute}`;
+
+            // 秒
+            const timeSecond = time.querySelector('span');
+
+            function setSecond() {
+                timeSecond.innerText = fillZero(new Date().getSeconds());
+            }
+
+            setInterval(setSecond, 1000);
+        }
+
+        function fillZero(num) {
+            return num < 10 ? '0' + num : num;
+        }
+
+        setTime();
+    }
+</script>
+</body>
+</html>
